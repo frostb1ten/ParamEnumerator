@@ -34,7 +34,7 @@ async fn main() -> Result<()> {
     let response = reqwest::get(u).await?;
     let response = response.text().await?;
     let re = Regex::new(r"^.?^.*=").unwrap();
-    let re2 = Regex::new(r".jpg|.png.|.js").unwrap();
+    let re2 = Regex::new(r".jpg|.png.|.js|.PNG|.JPG|.pdf").unwrap();
     for line in response.lines() {
         let lines = line.to_string();
         let replace = OtherRegex::new(r"\=(.*)").unwrap();
@@ -51,18 +51,21 @@ async fn main() -> Result<()> {
             }
         }
     }
-    let file = File::open("./output.txt").expect("file error");
-    let reader = BufReader::new(file);
-    let lines: BTreeSet<_> = reader
-        .lines()
-        .map(|l| l.expect("Couldn't read a line"))
-        .collect();
-    let mut file = File::create("./output.txt").expect("file error");
-    for line in lines {
-        file.write_all(line.as_bytes())
-            .expect("Couldn't write to file");
-        file.write_all(b"\n").expect("Couldn't write to file");
-        println!("{}", line);
+    if Path::new("./output.txt").exists() == false {
+        println!("No URLs Found!")
     }
+        let file = File::open("./output.txt").expect("file error");
+        let reader = BufReader::new(file);
+        let lines: BTreeSet<_> = reader
+            .lines()
+            .map(|l| l.expect("Couldn't read a line"))
+            .collect();
+        let mut file = File::create("./output.txt").expect("file error");
+        for line in lines {
+            file.write_all(line.as_bytes())
+                .expect("Couldn't write to file");
+            file.write_all(b"\n").expect("Couldn't write to file");
+            println!("{}", line);
+        }
     Ok(())
 }
