@@ -23,8 +23,8 @@ error_chain! {
 #[tokio::main]
 async fn main() -> Result<()> {
     println!("Gathering parameters... Please wait.");
-    if Path::new("./paramspider.txt").exists() {
-        fs::remove_file("./paramspider.txt")?;
+    if Path::new("./output.txt").exists() {
+        fs::remove_file("./output.txt")?;
     }
     fs::create_dir_all("./analysis")?;
     let domain = std::env::args().nth(1).expect("Missing URL");
